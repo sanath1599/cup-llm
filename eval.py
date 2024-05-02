@@ -5,11 +5,29 @@ from codebleu import calc_codebleu
 warnings.filterwarnings('ignore')
 
 def load_jsonl_file(filepath):
+    """
+    Loads a JSONL file and yields each line as a JSON object.
+
+    Args:
+        filepath (str): The path to the JSONL file.
+
+    Yields:
+        dict: A JSON object representing each line in the file.
+    """
     with open(filepath, 'r', encoding='utf-8') as file:
         for line in file:
             yield json.loads(line)
 
 def average_metrics(scores):
+    """
+    Calculate the average scores for different metrics.
+
+    Args:
+        scores (list): A list of dictionaries containing scores for different metrics.
+
+    Returns:
+        dict: A dictionary containing the average scores for each metric.
+    """
     avg_scores = {
         'codebleu': 0,
         'ngram_match_score': 0,
@@ -26,6 +44,19 @@ def average_metrics(scores):
     return avg_scores
 
 def evaluate_codebleu(data_file, evaluate_new_desc=True):
+    """
+    Evaluate the CodeBLEU scores for the given data file.
+
+    Args:
+        data_file (str): The path to the data file.
+        evaluate_new_desc (bool, optional): Whether to evaluate the CodeBLEU score for the new description. 
+        Defaults to True.
+
+    Returns:
+        tuple: A tuple containing the average CodeBLEU scores for the source description, destination description,
+        and new description (if evaluate_new_desc is True). If evaluate_new_desc is False, the third element
+        of the tuple will be None.
+    """
     src_desc_scores = []
     dst_desc_scores = []
     new_desc_scores = []
@@ -48,6 +79,19 @@ def evaluate_codebleu(data_file, evaluate_new_desc=True):
     return avg_src_desc, avg_dst_desc, avg_new_desc
 
 def run_evaluations():
+    """
+    Runs evaluations for the cup-llm project.
+
+    This function evaluates the CodeBLEU scores for different versions of descriptions in the cup-llm project.
+    It prints the average CodeBLEU scores for src_desc and dst_desc (common across all files),
+    as well as the average CodeBLEU scores for new_desc in each version.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
     base_path = './dataset/cup2_dataset/updated_descriptions_gpt-3.5-turbo'
     versions = [f"{base_path}_v{i}.jsonl" for i in range(1, 11)] 
     overall_new_desc_scores = []
